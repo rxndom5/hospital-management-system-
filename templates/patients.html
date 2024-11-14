@@ -1,0 +1,306 @@
+<!--  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Patients</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul>
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <h1>Manage Patients</h1>
+
+    <form action="/add_patient" method="POST">
+        <h3>Add New Patient</h3>
+        <input type="text" name="name" placeholder="Patient Name" required>
+        <input type="number" name="age" placeholder="Age" required>
+        <input type="text" name="gender" placeholder="Gender" required>
+        <input type="text" name="contact" placeholder="Contact" required>
+        <input type="text" name="address" placeholder="Address" required>
+        <button type="submit">Add Patient</button>
+    </form>
+
+    <h3>Existing Patients</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>PatientID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Contact</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+            <tr>
+                <td>{{ patient[0] }}</td>
+                <td>{{ patient[1] }}</td>
+                <td>{{ patient[2] }}</td>
+                <td>{{ patient[3] }}</td>
+                <td>{{ patient[4] }}</td>
+                <td>{{ patient[5] }}</td>
+                <td>
+                    <a href="/edit_patient/{{ patient[0] }}">Edit</a> |
+                    <a href="/delete_patient/{{ patient[0] }}" onclick="return confirm('Are you sure you want to delete this patient?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    
+    <br><br>
+    <a href="/patients_without_appointments">
+        <button>View Patients Without Appointments</button>
+    </a>
+
+    <a href="/">Back to Home</a>
+</body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Patients</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+        }
+
+        h1, h3 {
+            text-align: center;
+            color: #333;
+        }
+
+        h1 {
+            margin-top: 30px;
+        }
+
+        h3 {
+            margin-top: 20px;
+        }
+
+        /* Flash Messages */
+        ul {
+            padding: 10px;
+            margin: 20px;
+            list-style: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px auto;
+            max-width: 500px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        form input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        form button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Table Styles */
+        table {
+            width: 90%;
+            margin: 30px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        table td {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Action Links */
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Button Container */
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            background-color: #28a745;
+            padding: 10px 25px;
+            font-size: 1rem;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container button:hover {
+            background-color: #218838;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1rem;
+            color: #007BFF;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul>
+        {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Page Title -->
+    <h1>Manage Patients</h1>
+
+    <!-- Add New Patient Form -->
+    <form action="/add_patient" method="POST">
+        <h3>Add New Patient</h3>
+        <input type="text" name="name" placeholder="Patient Name" required>
+        <input type="number" name="age" placeholder="Age" required>
+        <input type="text" name="gender" placeholder="Gender" required>
+        <input type="text" name="contact" placeholder="Contact" required>
+        <input type="text" name="address" placeholder="Address" required>
+        <button type="submit">Add Patient</button>
+    </form>
+
+    <!-- Existing Patients Table -->
+    <h3>Existing Patients</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>PatientID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Contact</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+            <tr>
+                <td>{{ patient[0] }}</td>
+                <td>{{ patient[1] }}</td>
+                <td>{{ patient[2] }}</td>
+                <td>{{ patient[3] }}</td>
+                <td>{{ patient[4] }}</td>
+                <td>{{ patient[5] }}</td>
+                <td>
+                    <a href="/edit_patient/{{ patient[0] }}">Edit</a> | 
+                    <a href="/delete_patient/{{ patient[0] }}" onclick="return confirm('Are you sure you want to delete this patient?')">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Button to View Patients Without Appointments -->
+    <div class="button-container">
+        <a href="/patients_without_appointments">
+            <button>View Patients Without Appointments</button>
+        </a>
+    </div>
+
+    <!-- Back to Home -->
+    <a href="/" class="back-link">Back to Home</a>
+
+</body>
+</html>
+

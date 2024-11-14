@@ -1,0 +1,285 @@
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Doctors</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul>
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <h1>Manage Doctors</h1>
+
+    <form action="/add_doctor" method="POST">
+        <h3>Add New Doctor</h3>
+        <input type="text" name="name" placeholder="Doctor Name" required>
+        <input type="text" name="specialty" placeholder="Specialty" required>
+        <input type="text" name="contact" placeholder="Contact" required>
+        <button type="submit">Add Doctor</button>
+    </form>
+
+    <h3>Existing Doctors</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>DoctorID</th>
+                <th>Name</th>
+                <th>Specialty</th>
+                <th>Contact</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doctor in doctors %}
+            <tr>
+                <td>{{ doctor[0] }}</td>
+                <td>{{ doctor[1] }}</td>
+                <td>{{ doctor[2] }}</td>
+                <td>{{ doctor[3] }}</td>
+                <td>
+                    
+                    <a href="/edit_doctor/{{ doctor[0] }}">Edit</a> | 
+                    
+                
+                    <a href="/delete_doctor/{{ doctor[0] }}" onclick="return confirm('Are you sure you want to delete this doctor?')">Delete</a> | 
+
+                    
+                    <a href="/doctor_appointments/{{ doctor[0] }}">View Appointments</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="/">Back to Home</a>
+
+    
+    <h3>Most Popular Doctor</h3>
+    <p>Doctor with the most appointments: {{ most_popular_doctor[0] }} ({{ most_popular_doctor[1] }} appointments)</p>
+
+</body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Doctors</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+        }
+
+        h1, h3 {
+            text-align: center;
+            color: #333;
+        }
+
+        h3 {
+            margin-top: 30px;
+            font-size: 1.2rem;
+        }
+
+        /* Flash Messages */
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 10px;
+            background-color: #ffeb3b;
+            color: #000;
+            text-align: center;
+        }
+
+        .success {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* Form Styles */
+        form {
+            width: 50%;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        form h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: #007BFF;
+        }
+
+        form input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Table Styles */
+        table {
+            width: 80%;
+            margin: 30px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+
+        table th {
+            background-color: #007BFF;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        table a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        table a:hover {
+            text-decoration: underline;
+        }
+
+        /* Back to Home Link */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 1.1rem;
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Popular Doctor Section */
+        .popular-doctor {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin: 30px auto;
+            width: 80%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul>
+        {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+
+    <h1>Manage Doctors</h1>
+
+    <!-- Add Doctor Form -->
+    <form action="/add_doctor" method="POST">
+        <h3>Add New Doctor</h3>
+        <input type="text" name="name" placeholder="Doctor Name" required>
+        <input type="text" name="specialty" placeholder="Specialty" required>
+        <input type="text" name="contact" placeholder="Contact" required>
+        <button type="submit">Add Doctor</button>
+    </form>
+
+    <!-- Existing Doctors Table -->
+    <h3>Existing Doctors</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>DoctorID</th>
+                <th>Name</th>
+                <th>Specialty</th>
+                <th>Contact</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doctor in doctors %}
+            <tr>
+                <td>{{ doctor[0] }}</td>
+                <td>{{ doctor[1] }}</td>
+                <td>{{ doctor[2] }}</td>
+                <td>{{ doctor[3] }}</td>
+                <td>
+                    <a href="/edit_doctor/{{ doctor[0] }}">Edit</a> | 
+                    <a href="/delete_doctor/{{ doctor[0] }}" onclick="return confirm('Are you sure you want to delete this doctor?')">Delete</a> | 
+                    <a href="/doctor_appointments/{{ doctor[0] }}">View Appointments</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="/" class="back-link">Back to Home</a>
+
+    <!-- Most Popular Doctor Section -->
+    <div class="popular-doctor">
+        <h3>Most Popular Doctor</h3>
+        <p>Doctor with the most appointments: <strong>{{ most_popular_doctor[0] }}</strong> ({{ most_popular_doctor[1] }} appointments)</p>
+    </div>
+
+</body>
+</html>

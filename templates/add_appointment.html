@@ -1,0 +1,159 @@
+<!--  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Appointment</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h2>Add New Appointment</h2>
+
+    <form action="/add_appointment" method="POST">
+        <label for="patient">Select Patient:</label>
+        <select name="patient" id="patient" required>
+            {% for patient in patients %}
+                <option value="{{ patient[0] }}">{{ patient[1] }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label for="doctor">Select Doctor:</label>
+        <select name="doctor" id="doctor" required>
+            {% for doctor in doctors %}
+                <option value="{{ doctor[0] }}">{{ doctor[1] }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+
+        <label for="appointment_date">Appointment Date:</label>
+        <input type="date" name="appointment_date" id="appointment_date" required>
+        <br><br>
+
+        <button type="submit">Add Appointment</button>
+    </form>
+
+    <br>
+    <a href="/appointments">Back to Appointments</a>
+</body>
+</html>
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Appointment</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            color: #007BFF;
+            margin-top: 40px;
+        }
+
+        /* Form Styling */
+        form {
+            background-color: #ffffff;
+            width: 50%;
+            margin: 30px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        select, input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            background-color: #f9f9f9;
+        }
+
+        select:focus, input[type="date"]:focus {
+            border-color: #007BFF;
+            outline: none;
+            background-color: #fff;
+        }
+
+        button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007BFF;
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h2>Add New Appointment</h2>
+
+    <form action="/add_appointment" method="POST">
+        <label for="patient">Select Patient:</label>
+        <select name="patient" id="patient" required>
+            {% for patient in patients %}
+                <option value="{{ patient[0] }}">{{ patient[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="doctor">Select Doctor:</label>
+        <select name="doctor" id="doctor" required>
+            {% for doctor in doctors %}
+                <option value="{{ doctor[0] }}">{{ doctor[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="appointment_date">Appointment Date:</label>
+        <input type="date" name="appointment_date" id="appointment_date" required>
+
+        <button type="submit">Add Appointment</button>
+    </form>
+
+    <a href="/appointments">Back to Appointments</a>
+
+</body>
+</html>

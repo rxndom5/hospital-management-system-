@@ -1,0 +1,162 @@
+<!--  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Patient</title>
+</head>
+<body>
+    <h1>Edit Patient Details</h1>
+    
+    <form action="/edit_patient/{{ patient[0] }}" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" name="name" value="{{ patient[1] }}" required>
+        <br>
+        
+        <label for="age">Age:</label>
+        <input type="number" name="age" value="{{ patient[2] }}" required>
+        <br>
+        
+        <label for="gender">Gender:</label>
+        <input type="text" name="gender" value="{{ patient[3] }}" required>
+        <br>
+        
+        <label for="contact">Contact:</label>
+        <input type="text" name="contact" value="{{ patient[4] }}" required>
+        <br>
+        
+        <label for="address">Address:</label>
+        <input type="text" name="address" value="{{ patient[5] }}" required>
+        <br>
+        
+        <button type="submit">Update Patient</button>
+    </form>
+
+    <a href="/patients">Back to Patients</a>
+</body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Patient</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            color: #333;
+        }
+
+        /* Form Container */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px auto;
+            max-width: 500px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Input Fields */
+        form input {
+            width: 100%;
+            padding: 12px;
+            margin: 12px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        form input:focus {
+            outline: none;
+            border-color: #007BFF;
+        }
+
+        /* Label Styles */
+        form label {
+            text-align: left;
+            font-weight: bold;
+            width: 100%;
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        /* Button Styles */
+        form button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Back to Patients Link */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            font-size: 1rem;
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>Edit Patient Details</h1>
+
+    <!-- Edit Patient Form -->
+    <form action="/edit_patient/{{ patient[0] }}" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" name="name" value="{{ patient[1] }}" required>
+        
+        <label for="age">Age:</label>
+        <input type="number" name="age" value="{{ patient[2] }}" required>
+        
+        <label for="gender">Gender:</label>
+        <input type="text" name="gender" value="{{ patient[3] }}" required>
+        
+        <label for="contact">Contact:</label>
+        <input type="text" name="contact" value="{{ patient[4] }}" required>
+        
+        <label for="address">Address:</label>
+        <input type="text" name="address" value="{{ patient[5] }}" required>
+        
+        <button type="submit">Update Patient</button>
+    </form>
+
+    <!-- Back to Patients Link -->
+    <a href="/patients" class="back-link">Back to Patients</a>
+
+</body>
+</html>
